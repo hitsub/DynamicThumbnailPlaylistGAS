@@ -1,3 +1,6 @@
+//DynamicThumbnailPlaylist JsonExport
+//Made by Hitsub
+
 function doGet() {
     //スクリプトに紐づいたアクティブなシートを取得
     const ss = SpreadsheetApp.getActiveSheet();
@@ -14,7 +17,8 @@ function doGet() {
       objectArray[y-1] = {};
       objectArray[y-1]["tags"] = [];
       //要素の列数分forループで表頭をキーに表データを格納
-      for(let x=0;x< data[0].length;x++){
+      for(let x=0;x< data[0].length;x++)
+      {
         // Logger.log(x + "," + y + " : " + data[y][x]);
         //URLはJSONに含めない
         if (x==1 || x == 2)
@@ -47,19 +51,37 @@ function doGet() {
   
   function getYoutubeSnippet(dataArray) {
     let resultArray = [...dataArray];
-    for (let chunk_i = 0; chunk_i < resultArray.length; chunk_i += 50) {
+    for (let chunk_i = 0; chunk_i < resultArray.length; chunk_i += 50)
+    {
       let chunk = resultArray.slice(chunk_i, chunk_i + 50).map(item => item.videoId);
       var ids = chunk.join(",");
       
       // データを取得
-      const results = YouTube.Videos.list('snippet', {
+      const response = YouTube.Videos.list('snippet', {
         id: ids
       });
-      for(let result_i = 0; result_i < results.items.length; result_i++){
-        if (resultArray[chunk_i + result_i] != null)
+      var response_i = 0;
+      for(let block_i = 0; block_i < chunk.length; block_i++)
+      {
+        let resultElement = resultArray[chunk_i + block_i];
+        if (resultElement != null && resultElement["videoId"] != '[object Undefined]')
         {
-          resultArray[chunk_i + result_i]["title"] = results.items[result_i].snippet.title;
-          resultArray[chunk_i + result_i]["channel"] = results.items[result_i].snippet.channelTitle;
+          let title = "LOADING";
+          let channel = "FAILED";
+  
+          if (resultElement["videoId"] == response.items[response_i].id)
+          {
+            title = response.items[response_i].snippet.title;
+            channel = response.items[response_i].snippet.channelTitle;
+            response_i++;
+  
+            //これ以上レスポンスが無ければ抜ける
+            if (response.items[response_i] == null){
+              break;
+            }
+          }
+          resultElement["title"] = title;
+          resultElement["channel"] = channel;
         }
       }
     }
