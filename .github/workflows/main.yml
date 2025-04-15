@@ -3,7 +3,7 @@ name: Release gas.js
 on:
   push:
     tags:
-      - 'v*.*.*'  # バージョンタグのpushをトリガーに
+      - "v*"
 
 jobs:
   release:
