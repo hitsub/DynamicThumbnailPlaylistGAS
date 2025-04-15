@@ -74,14 +74,14 @@ function doGet() {
             title = response.items[response_i].snippet.title;
             channel = response.items[response_i].snippet.channelTitle;
             response_i++;
-  
-            //これ以上レスポンスが無ければ抜ける
-            if (response.items[response_i] == null){
-              break;
-            }
           }
           resultElement["title"] = title;
           resultElement["channel"] = channel;
+  
+          //これ以上レスポンスが無ければ抜ける
+          if (response.items[response_i] == null){
+            break;
+          }
         }
       }
     }
