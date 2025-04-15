@@ -13,6 +13,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Insert tag comment into gas.js
+      run: |
+        TAG=${{ github.ref_name }}
+        # 先頭に //タグ を入れてgas.jsを上書き
+        sed -i "1s/^/\/\/${TAG}\n/" gas.js
+
     - name: Create release (if not exists)
       id: create_release
       uses: softprops/action-gh-release@v1
