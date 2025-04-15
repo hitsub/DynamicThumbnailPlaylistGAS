@@ -37,6 +37,8 @@ function doGet() {
           objectArray[y-1][data[0][x]] = data[y][x];
         }
       }
+      // 事故りやすいためシートのIDは採用せず採番しなおすように
+      objectArray[y-1]["id"] = y-1;
     }
     //オブジェクトの変数をJSON形式に変換
     const json = JSON.stringify(getYoutubeSnippet(objectArray));
